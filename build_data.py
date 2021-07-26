@@ -53,12 +53,16 @@ alfred_settings_data = {
         {
             "name": "arg",
             "type_is_store": True
+        },
+        {
+            "name": "autocomplete",
+            "type_is_store": True
         }
     ],
     "title_field": "{title}",
     "subtitle_field": "{subtitle}",
     "arg_field": "{arg}",
-    "autocomplete_field": "{title}",
+    "autocomplete_field": "{autocomplete}",
 }
 
 
@@ -82,6 +86,7 @@ def create_alfred_cloudformation_data_file():
             title=f"Resource: {service} | {resource}",
             subtitle=f"open {doc_link}",
             arg=doc_link,
+            auto_complete=f"Resource {service} {resource}",
         )
         alfred_data.append(dct)
 
@@ -98,6 +103,7 @@ def create_alfred_cloudformation_data_file():
             title=f"Property: {service} | {resource} - {prop_name}",
             subtitle=f"open {doc_link}",
             arg=doc_link,
+            auto_complete=f"Property {service} {resource} {prop_name}",
         )
         alfred_data.append(dct)
 
