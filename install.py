@@ -31,7 +31,7 @@ dir_alfred_fts.mkdir(parents=True, exist_ok=True)
 
 path_data_zip = Path(dir_here, "cloudformation-full-text-search-data.zip")
 path_alfred_fts_data = Path(dir_alfred_fts, "cloudformation.json")
-path_alfred_fts_settings = Path(dir_alfred_fts, "cloudformation-settings.json")
+path_alfred_fts_settings = Path(dir_alfred_fts, "cloudformation-setting.json")
 path_alfred_fts_index = Path(dir_alfred_fts, "cloudformation-whoosh_index")
 
 # Find latest release asset
