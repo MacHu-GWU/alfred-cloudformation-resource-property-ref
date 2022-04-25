@@ -8,34 +8,26 @@ I have to deeply understand the data in spec file, so I can generate cottonforma
 code out of it.
 """
 
-import os
+from pathlib_mate import Path
 import json
 import requests
 
-HOME = os.path.expanduser("~")
-HERE = os.path.dirname(os.path.abspath(__file__))
-SPEC_FILE = os.path.join(HERE, "spec.json")
-FTS_DATA_FILE = os.path.join(HOME, ".alfred-fts", "cloudformation.json")
-FTS_SETTING_FILE = os.path.join(HOME, ".alfred-fts", "cloudformation-setting.json")
-
-
-def write_file(path, text):
-    with open(path, "wb") as f:
-        f.write(text.encode("utf-8"))
+dir_home = Path.home()
+dir_here = Path.cwd().absolute()
+path_spec_file = Path(dir_here, "spec.json")
+p_alfred_data = Path(dir_here, f"cloudformation.json")
+p_alfred_setting_data = Path(dir_here, f"cloudformation-setting.json")
 
 
 def download_spec_file():
-    if not os.path.exists(SPEC_FILE):
+    if not path_spec_file.exists():
         url = "https://d1uauaxba7bl26.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json"
         response = requests.get(url)
-        with open(SPEC_FILE, "wb") as f:
-            f.write(response.content)
+        path_spec_file.write_bytes(response.content)
 
 
 def read_spec_file():
-    with open(SPEC_FILE, "rb") as f:
-        data = json.loads(f.read().decode("utf-8"))
-    return data
+    return json.loads(path_spec_file.read_text())
 
 
 alfred_settings_data = {
@@ -107,8 +99,8 @@ def create_alfred_cloudformation_data_file():
         )
         alfred_data.append(dct)
 
-    write_file(FTS_DATA_FILE, json.dumps(alfred_data, indent=4))
-    write_file(FTS_SETTING_FILE, json.dumps(alfred_settings_data, indent=4))
+    p_alfred_data.write_text(json.dumps(alfred_data, indent=4))
+    p_alfred_setting_data.write_text(json.dumps(alfred_settings_data, indent=4))
 
 
 if __name__ == "__main__":
