@@ -24,9 +24,10 @@ from urllib.request import urlopen
 from zipfile import ZipFile
 
 # Define variables
+# don't use Path(__file__).absolute().parent, this script is executed by `python3 -c (curl ...)`
 dir_here = Path.cwd().absolute()
 dir_home = Path.home()
-dir_alfred_fts = Path(dir_home, ".alfred-fts")
+dir_alfred_fts = Path(dir_home, ".alfred-afwf", "afwf_fts_anything")
 dir_alfred_fts.mkdir(parents=True, exist_ok=True)
 
 path_data_zip = Path(dir_here, "cloudformation-full-text-search-data.zip")
