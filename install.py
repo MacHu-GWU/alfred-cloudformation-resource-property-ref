@@ -30,7 +30,7 @@ dir_alfred_fts = Path(dir_home, ".alfred-fts")
 dir_alfred_fts.mkdir(parents=True, exist_ok=True)
 
 path_data_zip = Path(dir_here, "cloudformation-full-text-search-data.zip")
-path_alfred_fts_data = Path(dir_alfred_fts, "cloudformation.json")
+path_alfred_fts_data = Path(dir_alfred_fts, "cloudformation-data.json")
 path_alfred_fts_settings = Path(dir_alfred_fts, "cloudformation-setting.json")
 path_alfred_fts_index = Path(dir_alfred_fts, "cloudformation-whoosh_index")
 
@@ -49,6 +49,6 @@ with ZipFile(str(path_data_zip), "r") as z:
     z.extractall(str(dir_here))
 
 # Copy data files to the correct location
-path_alfred_fts_data.write_text(Path(dir_here, "cloudformation.json").read_text())
+path_alfred_fts_data.write_text(Path(dir_here, "cloudformation-data.json").read_text())
 path_alfred_fts_settings.write_text(Path(dir_here, "cloudformation-setting.json").read_text())
 shutil.rmtree(str(path_alfred_fts_index), ignore_errors=True)
