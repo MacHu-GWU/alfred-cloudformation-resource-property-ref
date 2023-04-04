@@ -8,15 +8,15 @@ I have to deeply understand the data in spec file, so I can generate cottonforma
 code out of it.
 """
 
-from pathlib_mate import Path
 import json
 import requests
+from pathlib_mate import Path
 
 dir_home = Path.home()
 dir_here = Path.cwd().absolute()
 path_spec_file = Path(dir_here, "spec.json")
-p_alfred_data = Path(dir_here, f"cloudformation.json")
-p_alfred_setting_data = Path(dir_here, f"cloudformation-setting.json")
+p_alfred_data = Path(dir_here, f"cloudformation-data.json")
+p_alfred_setting = Path(dir_here, f"cloudformation-setting.json")
 
 
 def download_spec_file():
@@ -31,30 +31,28 @@ def read_spec_file():
 
 
 alfred_settings_data = {
-    "columns": [
+    "fields": [
         {
-            "name": "title",
+            "name": "title_ngram",
+            "type_is_store": True,
+            "type_is_ngram": True,
             "ngram_maxsize": 10,
             "ngram_minsize": 2,
-            "type_is_ngram": True
         },
         {
-            "name": "subtitle",
-            "type_is_store": True
+            "name": "title_phrase",
+            "type_is_phrase": True,
+            "weight": 2.0,
         },
         {
-            "name": "arg",
-            "type_is_store": True
+            "name": "url",
+            "type_is_store": True,
         },
-        {
-            "name": "autocomplete",
-            "type_is_store": True
-        }
     ],
-    "title_field": "{title}",
-    "subtitle_field": "{subtitle}",
-    "arg_field": "{arg}",
-    "autocomplete_field": "{autocomplete}",
+    "title_field": "{title_ngram}",
+    "subtitle_field": "open {url}",
+    "arg_field": "{url}",
+    "autocomplete_field": "{title_ngram}",
 }
 
 
@@ -74,11 +72,11 @@ def create_alfred_cloudformation_data_file():
         print("Build {}".format(res_id))
         _, service, resource = res_id.split("::")
         doc_link = res_dct["Documentation"]
+        title = f"Resource: {service} | {resource}"
         dct = dict(
-            title=f"Resource: {service} | {resource}",
-            subtitle=f"open {doc_link}",
-            arg=doc_link,
-            auto_complete=f"Resource {service} {resource}",
+            title_ngram=title,
+            title_phrase=title,
+            url=doc_link,
         )
         alfred_data.append(dct)
 
@@ -91,16 +89,16 @@ def create_alfred_cloudformation_data_file():
         resource, prop_name = prop_full_name.split(".")
 
         doc_link = prop_dct["Documentation"]
+        title = f"Property: {service} | {resource} - {prop_name}"
         dct = dict(
-            title=f"Property: {service} | {resource} - {prop_name}",
-            subtitle=f"open {doc_link}",
-            arg=doc_link,
-            auto_complete=f"Property {service} {resource} {prop_name}",
+            title_ngram=title,
+            title_phrase=title,
+            url=doc_link,
         )
         alfred_data.append(dct)
 
     p_alfred_data.write_text(json.dumps(alfred_data, indent=4))
-    p_alfred_setting_data.write_text(json.dumps(alfred_settings_data, indent=4))
+    p_alfred_setting.write_text(json.dumps(alfred_settings_data, indent=4))
 
 
 if __name__ == "__main__":
